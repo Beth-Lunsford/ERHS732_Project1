@@ -7,24 +7,33 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(broom)
+library(lubridate)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# Train Data
+```{r}
+train_raw <- read_csv("train.csv")
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+What is the study period?
+```{r}
+range(train_raw$Date)
+train_raw %>%
+  pull(Date) %>%
+  range() %>%
+  diff()
+```
+WNV Detection Trend
+```{r}
+library(ggplot2)
+train_raw %>%
+  group_by(Date) %>%
+  summarise(WNV_in_year = sum(WnvPresent)) %>%
+  ggplot(aes(x = Date, y = WNV_in_year)) +
+  geom_point()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
