@@ -36,4 +36,17 @@ train_raw %>%
   geom_point()
 ```
 
+Is the WNVPresent mosquito associated with day of week? 
+```{r}
+obs <- train_raw %>%
+  mutate(dow = wday(Date, label = TRUE))
+obs %>%
+  group_by(dow) %>%
+  summarize(sum(WnvPresent),
+            median(WnvPresent),
+            quantile(WnvPresent, 0.25),
+            quantile(WnvPresent, 0.75))
+  
+```
+
 
